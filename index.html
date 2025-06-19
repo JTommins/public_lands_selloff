@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title>Public Land Sell-Off: Special Designations At Risk</title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <script src="data/Public_Lands_Selloff_PADUS_1.js"></script>
+        <script src="data/BillionaireWildernress_2.js"></script>
+        <script src="data/PublicLandBorders_3.js"></script>
+        <script src="data/TargetedLands_4.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:false, maxZoom:28, minZoom:1
+        }).fitBounds([[35.89195315678434,-129.22645152966948],[55.47894580008787,-93.85813861047791]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        // remove popup's row if "visible-with-data"
+        function removeEmptyRowsFromPopupContent(content, feature) {
+         var tempDiv = document.createElement('div');
+         tempDiv.innerHTML = content;
+         var rows = tempDiv.querySelectorAll('tr');
+         for (var i = 0; i < rows.length; i++) {
+             var td = rows[i].querySelector('td.visible-with-data');
+             var key = td ? td.id : '';
+             if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
+                 rows[i].parentNode.removeChild(rows[i]);
+             }
+         }
+         return tempDiv.innerHTML;
+        }
+        // add class to format popup if it contains media
+		function addClassToPopupIfMedia(content, popup) {
+			var tempDiv = document.createElement('div');
+			tempDiv.innerHTML = content;
+			if (tempDiv.querySelector('td img')) {
+				popup._contentNode.classList.add('media');
+					// Delay to force the redraw
+					setTimeout(function() {
+						popup.update();
+					}, 10);
+			} else {
+				popup._contentNode.classList.remove('media');
+			}
+		}
+        var title = new L.Control({'position':'topright'});
+        title.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info');
+            this.update();
+            return this._div;
+        };
+        title.update = function () {
+            this._div.innerHTML = '<h2>Public Land Sell-Off: Special Designations At Risk</h2>';
+        };
+        title.addTo(map);
+        var abstract = new L.Control({'position':'topright'});
+        abstract.onAdd = function (map) {
+            this._div = L.DomUtil.create('div',
+            'leaflet-control abstract');
+            this._div.id = 'abstract'
+                this._div.setAttribute("onmouseenter", "abstract.show()");
+                this._div.setAttribute("onmouseleave", "abstract.hide()");
+                this.hide();
+                return this._div;
+            };
+            abstract.hide = function () {
+                this._div.classList.remove("abstractUncollapsed");
+                this._div.classList.add("abstract");
+                this._div.innerHTML = 'i'
+            }
+            abstract.show = function () {
+                this._div.classList.remove("abstract");
+                this._div.classList.add("abstractUncollapsed");
+                this._div.innerHTML = 'Within the domain of the U.S. Forest Service and Bureau of Land Management, a variety of special landscape designations exist to preserve distinct ecological, cultural, and recreational areas for public use and benefit. These include the vulnerable ecosystems protected by Wilderness Study Areas and Inventoried Roadless Areas; treasured cultural and recreational resources in National Scenic and Botanical Areas, Historical Areas, and Recreation Management Areas; critical tools for ecological study in Research Natural Areas and Experimental Forests; and many more.<br /><br />The recent Republican effort to offer over 250 million acres of our public lands for potential sale, while exempting National Parks, National Monuments, and Wilderness Areas, ignores many of these equally important and valuable protected area units. This map shows the extent of proposed land eligible for sale in the bill and its overlap with these less well-known, but no less important, designations. <br /><br />Click one of the yellow proposed sale areas to see which designated protected units are threatened by the bill. Then write, call, or knock on the door of your federal representative and demand they preserve our public lands. ';
+        };
+        abstract.addTo(map);
+        var zoomControl = L.control.zoom({
+            position: 'topleft'
+        }).addTo(map);
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_esridark_0');
+        map.getPane('pane_esridark_0').style.zIndex = 400;
+        var layer_esridark_0 = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+            pane: 'pane_esridark_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 18
+        });
+        layer_esridark_0;
+        map.addLayer(layer_esridark_0);
+        function pop_Public_Lands_Selloff_PADUS_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Unit Name</th>\
+                        <td class="visible-with-data" id="Unit_Nm">' + (feature.properties['Unit_Nm'] !== null ? autolinker.link(String(feature.properties['Unit_Nm']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Designation Type</th>\
+                        <td class="visible-with-data" id="Des_Tp">' + (feature.properties['Des_Tp'] !== null ? autolinker.link(String(feature.properties['Des_Tp']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Threatened_Acres</th>\
+                        <td class="visible-with-data" id="Threatened_Acres">' + (feature.properties['Threatened_Acres'] !== null ? autolinker.link(String(feature.properties['Threatened_Acres']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Unit_Area_Acres</th>\
+                        <td class="visible-with-data" id="Unit_Area_Acres">' + (feature.properties['Unit_Area_Acres'] !== null ? autolinker.link(String(feature.properties['Unit_Area_Acres']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Percent_Threatened</th>\
+                        <td class="visible-with-data" id="Percent_Threatened">' + (feature.properties['Percent_Threatened'] !== null ? autolinker.link(String(feature.properties['Percent_Threatened']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Local Manager</th>\
+                        <td class="visible-with-data" id="Loc_Mang">' + (feature.properties['Loc_Mang'] !== null ? autolinker.link(String(feature.properties['Loc_Mang']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Public_Lands_Selloff_PADUS_1_0(feature) {
+            switch(String(feature.properties['Mang_Name'])) {
+                case 'BLM':
+                    return {
+                pane: 'pane_Public_Lands_Selloff_PADUS_1',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(215,215,178,0.6)',
+                interactive: true,
+            }
+                    break;
+                case 'USFS':
+                    return {
+                pane: 'pane_Public_Lands_Selloff_PADUS_1',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(133,155,135,0.6)',
+                interactive: true,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_Public_Lands_Selloff_PADUS_1',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(131,13,215,0.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Public_Lands_Selloff_PADUS_1');
+        map.getPane('pane_Public_Lands_Selloff_PADUS_1').style.zIndex = 401;
+        map.getPane('pane_Public_Lands_Selloff_PADUS_1').style['mix-blend-mode'] = 'normal';
+        var layer_Public_Lands_Selloff_PADUS_1 = new L.geoJson(json_Public_Lands_Selloff_PADUS_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Public_Lands_Selloff_PADUS_1',
+            layerName: 'layer_Public_Lands_Selloff_PADUS_1',
+            pane: 'pane_Public_Lands_Selloff_PADUS_1',
+            onEachFeature: pop_Public_Lands_Selloff_PADUS_1,
+            style: style_Public_Lands_Selloff_PADUS_1_0,
+        });
+        bounds_group.addLayer(layer_Public_Lands_Selloff_PADUS_1);
+        map.addLayer(layer_Public_Lands_Selloff_PADUS_1);
+        function pop_BillionaireWildernress_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(String(feature.properties['id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Name'] !== null ? autolinker.link(String(feature.properties['Name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_BillionaireWildernress_2_0() {
+            return {
+                fill: false,
+                stroke: false,
+                interactive: false
+            }
+        }
+        map.createPane('pane_BillionaireWildernress_2');
+        map.getPane('pane_BillionaireWildernress_2').style.zIndex = 402;
+        map.getPane('pane_BillionaireWildernress_2').style['mix-blend-mode'] = 'normal';
+        var layer_BillionaireWildernress_2 = new L.geoJson(json_BillionaireWildernress_2, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_BillionaireWildernress_2',
+            layerName: 'layer_BillionaireWildernress_2',
+            pane: 'pane_BillionaireWildernress_2',
+            onEachFeature: pop_BillionaireWildernress_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_BillionaireWildernress_2_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_BillionaireWildernress_2);
+        map.addLayer(layer_BillionaireWildernress_2);
+        function pop_PublicLandBorders_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_PublicLandBorders_3_0() {
+            return {
+                pane: 'pane_PublicLandBorders_3',
+                opacity: 1,
+                color: 'rgba(240,240,240,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(125,139,143,0.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_PublicLandBorders_3');
+        map.getPane('pane_PublicLandBorders_3').style.zIndex = 403;
+        map.getPane('pane_PublicLandBorders_3').style['mix-blend-mode'] = 'normal';
+        var layer_PublicLandBorders_3 = new L.geoJson(json_PublicLandBorders_3, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_PublicLandBorders_3',
+            layerName: 'layer_PublicLandBorders_3',
+            pane: 'pane_PublicLandBorders_3',
+            onEachFeature: pop_PublicLandBorders_3,
+            style: style_PublicLandBorders_3_0,
+        });
+        bounds_group.addLayer(layer_PublicLandBorders_3);
+        map.addLayer(layer_PublicLandBorders_3);
+        function pop_TargetedLands_4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['unique_id'] !== null ? autolinker.link(String(feature.properties['unique_id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_TargetedLands_4_0() {
+            return {
+                pane: 'pane_TargetedLands_4',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,0,0.6980392156862745)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_TargetedLands_4');
+        map.getPane('pane_TargetedLands_4').style.zIndex = 404;
+        map.getPane('pane_TargetedLands_4').style['mix-blend-mode'] = 'normal';
+        var layer_TargetedLands_4 = new L.geoJson(json_TargetedLands_4, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_TargetedLands_4',
+            layerName: 'layer_TargetedLands_4',
+            pane: 'pane_TargetedLands_4',
+            onEachFeature: pop_TargetedLands_4,
+            style: style_TargetedLands_4_0,
+        });
+        bounds_group.addLayer(layer_TargetedLands_4);
+        map.addLayer(layer_TargetedLands_4);
+        map.on("zoomend", function(e) {
+            if (map.getZoom() <= 19 && map.getZoom() >= 8) {
+                map.addLayer(layer_PublicLandBorders_3);
+            } else if (map.getZoom() > 19 || map.getZoom() < 8) {
+                map.removeLayer(layer_PublicLandBorders_3);
+            }
+        });
+            if (map.getZoom() <= 19 && map.getZoom() >= 8) {
+                map.addLayer(layer_PublicLandBorders_3);
+            } else if (map.getZoom() > 19 || map.getZoom() < 8) {
+                map.removeLayer(layer_PublicLandBorders_3);
+            }
+        map.on("zoomend", function(){
+
+                if (map.hasLayer(layer_BillionaireWildernress_2)) {
+                    if (map.getZoom() <= 5 && map.getZoom() >= 9) {
+                        layer_BillionaireWildernress_2.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer_BillionaireWildernress_2.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+        });
+        setBounds();
+        var i = 0;
+        layer_BillionaireWildernress_2.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Name'] !== null?String('<div style="color: #323232; font-size: 14pt; font-style: italic; font-family: \'Times New Roman\', sans-serif;">' + layer.feature.properties['Name']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_BillionaireWildernress_2'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+                if (map.hasLayer(layer_BillionaireWildernress_2)) {
+                    if (map.getZoom() <= 5 && map.getZoom() >= 9) {
+                        layer_BillionaireWildernress_2.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer_BillionaireWildernress_2.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+        map.addControl(new L.Control.Search({
+            layer: layer_Public_Lands_Selloff_PADUS_1,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'Unit_Nm'}));
+        document.getElementsByClassName('search-button')[0].className +=
+         ' fa fa-binoculars';
+        resetLabels([layer_BillionaireWildernress_2]);
+        map.on("zoomend", function(){
+            resetLabels([layer_BillionaireWildernress_2]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_BillionaireWildernress_2]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_BillionaireWildernress_2]);
+        });
+        </script>
+    </body>
+</html>
