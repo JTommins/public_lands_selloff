@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
         <meta name="mobile-web-app-capable" content="yes">
@@ -10,7 +11,6 @@
         <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
         <link rel="stylesheet" href="css/qgis2web.css">
         <link rel="stylesheet" href="css/fontawesome-all.min.css">
-        <link rel="stylesheet" href="css/leaflet-search.css">
         <style>
         html, body, #map {
             width: 100%;
@@ -34,16 +34,18 @@
         <script src="js/rbush.min.js"></script>
         <script src="js/labelgun.min.js"></script>
         <script src="js/labels.js"></script>
-        <script src="js/leaflet-search.js"></script>
-        <script src="data/Public_Lands_Selloff_PADUS_1.js"></script>
-        <script src="data/BillionaireWildernress_2.js"></script>
-        <script src="data/PublicLandBorders_3.js"></script>
-        <script src="data/TargetedLands_4.js"></script>
+        <script src="data/USFS_1.js"></script>
+        <script src="data/BLM_2.js"></script>
+        <script src="data/state_boundaryreprojected_3.js"></script>
+        <script src="data/ThreatenedPublicLands_4.js"></script>
+        <script src="data/AFFECTED_DESIGNATIONS_FINAL_5.js"></script>
+        <script src="data/THREATENED_DESIGNATION_OUTLINE_FINAL_6.js"></script>
+        <script src="data/BillionaireWildernress_7.js"></script>
         <script>
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[35.89195315678434,-129.22645152966948],[55.47894580008787,-93.85813861047791]]);
-        var hash = new L.Hash(map);
+        }).fitBounds([[42.73972331631743,-116.90782776242395],[48.13418386372131,-108.55170260075911]]);
+	// Add static "Billionaire Wilderness" label
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
         // remove popup's row if "visible-with-data"
@@ -124,31 +126,37 @@
         });
         layer_esridark_0;
         map.addLayer(layer_esridark_0);
-        function pop_Public_Lands_Selloff_PADUS_1(feature, layer) {
+        function pop_USFS_1(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <th scope="row">Unit Name</th>\
-                        <td class="visible-with-data" id="Unit_Nm">' + (feature.properties['Unit_Nm'] !== null ? autolinker.link(String(feature.properties['Unit_Nm']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Designation Type</th>\
-                        <td class="visible-with-data" id="Des_Tp">' + (feature.properties['Des_Tp'] !== null ? autolinker.link(String(feature.properties['Des_Tp']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['OBJECTID'] !== null ? autolinker.link(String(feature.properties['OBJECTID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Threatened_Acres</th>\
-                        <td class="visible-with-data" id="Threatened_Acres">' + (feature.properties['Threatened_Acres'] !== null ? autolinker.link(String(feature.properties['Threatened_Acres']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['ADMINFORESTID'] !== null ? autolinker.link(String(feature.properties['ADMINFORESTID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Unit_Area_Acres</th>\
-                        <td class="visible-with-data" id="Unit_Area_Acres">' + (feature.properties['Unit_Area_Acres'] !== null ? autolinker.link(String(feature.properties['Unit_Area_Acres']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['REGION'] !== null ? autolinker.link(String(feature.properties['REGION']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Percent_Threatened</th>\
-                        <td class="visible-with-data" id="Percent_Threatened">' + (feature.properties['Percent_Threatened'] !== null ? autolinker.link(String(feature.properties['Percent_Threatened']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['FORESTORGCODE'] !== null ? autolinker.link(String(feature.properties['FORESTORGCODE']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Local Manager</th>\
-                        <td class="visible-with-data" id="Loc_Mang">' + (feature.properties['Loc_Mang'] !== null ? autolinker.link(String(feature.properties['Loc_Mang']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['FORESTNAME'] !== null ? autolinker.link(String(feature.properties['FORESTNAME']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['STUSPS'] !== null ? autolinker.link(String(feature.properties['STUSPS']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Total_Acres'] !== null ? autolinker.link(String(feature.properties['Total_Acres']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['eligible 5070 for area calc_Threatened_Acres'] !== null ? autolinker.link(String(feature.properties['eligible 5070 for area calc_Threatened_Acres']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Percent_Threatened'] !== null ? autolinker.link(String(feature.properties['Percent_Threatened']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -158,55 +166,387 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_Public_Lands_Selloff_PADUS_1_0(feature) {
-            switch(String(feature.properties['Mang_Name'])) {
-                case 'BLM':
-                    return {
-                pane: 'pane_Public_Lands_Selloff_PADUS_1',
+        function style_USFS_1_0() {
+            return {
+                pane: 'pane_USFS_1',
                 stroke: false, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(215,215,178,0.6)',
+                fillColor: 'rgba(139,195,142,0.25098039215686274)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_USFS_1');
+        map.getPane('pane_USFS_1').style.zIndex = 401;
+        map.getPane('pane_USFS_1').style['mix-blend-mode'] = 'normal';
+        var layer_USFS_1 = new L.geoJson(json_USFS_1, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_USFS_1',
+            layerName: 'layer_USFS_1',
+            pane: 'pane_USFS_1',
+            onEachFeature: pop_USFS_1,
+            style: style_USFS_1_0,
+        });
+        bounds_group.addLayer(layer_USFS_1);
+        map.addLayer(layer_USFS_1);
+        function pop_BLM_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ADMIN_ST'] !== null ? autolinker.link(String(feature.properties['ADMIN_ST']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ADMIN_UNIT_NAME'] !== null ? autolinker.link(String(feature.properties['ADMIN_UNIT_NAME']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ADMIN_UNIT_TYPE'] !== null ? autolinker.link(String(feature.properties['ADMIN_UNIT_TYPE']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ADMIN_DEPT_CODE'] !== null ? autolinker.link(String(feature.properties['ADMIN_DEPT_CODE']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ADMIN_AGENCY_CODE'] !== null ? autolinker.link(String(feature.properties['ADMIN_AGENCY_CODE']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Total_Acres'] !== null ? autolinker.link(String(feature.properties['Total_Acres']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['blm eligible 5070_Threatened_Acres'] !== null ? autolinker.link(String(feature.properties['blm eligible 5070_Threatened_Acres']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Percent_Threatened'] !== null ? autolinker.link(String(feature.properties['Percent_Threatened']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_BLM_2_0() {
+            return {
+                pane: 'pane_BLM_2',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(229,219,134,0.25098039215686274)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_BLM_2');
+        map.getPane('pane_BLM_2').style.zIndex = 402;
+        map.getPane('pane_BLM_2').style['mix-blend-mode'] = 'normal';
+        var layer_BLM_2 = new L.geoJson(json_BLM_2, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_BLM_2',
+            layerName: 'layer_BLM_2',
+            pane: 'pane_BLM_2',
+            onEachFeature: pop_BLM_2,
+            style: style_BLM_2_0,
+        });
+        bounds_group.addLayer(layer_BLM_2);
+        map.addLayer(layer_BLM_2);
+        function pop_state_boundaryreprojected_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['REGION'] !== null ? autolinker.link(String(feature.properties['REGION']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['DIVISION'] !== null ? autolinker.link(String(feature.properties['DIVISION']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['STATEFP'] !== null ? autolinker.link(String(feature.properties['STATEFP']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['STATENS'] !== null ? autolinker.link(String(feature.properties['STATENS']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['GEOID'] !== null ? autolinker.link(String(feature.properties['GEOID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['STUSPS'] !== null ? autolinker.link(String(feature.properties['STUSPS']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAME'] !== null ? autolinker.link(String(feature.properties['NAME']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LSAD'] !== null ? autolinker.link(String(feature.properties['LSAD']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MTFCC'] !== null ? autolinker.link(String(feature.properties['MTFCC']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FUNCSTAT'] !== null ? autolinker.link(String(feature.properties['FUNCSTAT']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ALAND'] !== null ? autolinker.link(String(feature.properties['ALAND']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AWATER'] !== null ? autolinker.link(String(feature.properties['AWATER']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['INTPTLAT'] !== null ? autolinker.link(String(feature.properties['INTPTLAT']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['INTPTLON'] !== null ? autolinker.link(String(feature.properties['INTPTLON']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['GIS_Ac_Dbl'] !== null ? autolinker.link(String(feature.properties['GIS_Ac_Dbl']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_state_boundaryreprojected_3_0() {
+            return {
+                pane: 'pane_state_boundaryreprojected_3',
+                opacity: 1,
+                color: 'rgba(240,240,240,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(125,139,143,0.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_state_boundaryreprojected_3');
+        map.getPane('pane_state_boundaryreprojected_3').style.zIndex = 403;
+        map.getPane('pane_state_boundaryreprojected_3').style['mix-blend-mode'] = 'normal';
+        var layer_state_boundaryreprojected_3 = new L.geoJson(json_state_boundaryreprojected_3, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_state_boundaryreprojected_3',
+            layerName: 'layer_state_boundaryreprojected_3',
+            pane: 'pane_state_boundaryreprojected_3',
+            onEachFeature: pop_state_boundaryreprojected_3,
+            style: style_state_boundaryreprojected_3_0,
+        });
+        bounds_group.addLayer(layer_state_boundaryreprojected_3);
+        map.addLayer(layer_state_boundaryreprojected_3);
+        function pop_ThreatenedPublicLands_4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['unique_id'] !== null ? autolinker.link(String(feature.properties['unique_id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_ThreatenedPublicLands_4_0() {
+            return {
+                pane: 'pane_ThreatenedPublicLands_4',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(245,245,39,0.8)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_ThreatenedPublicLands_4');
+        map.getPane('pane_ThreatenedPublicLands_4').style.zIndex = 404;
+        map.getPane('pane_ThreatenedPublicLands_4').style['mix-blend-mode'] = 'normal';
+        var layer_ThreatenedPublicLands_4 = new L.geoJson(json_ThreatenedPublicLands_4, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_ThreatenedPublicLands_4',
+            layerName: 'layer_ThreatenedPublicLands_4',
+            pane: 'pane_ThreatenedPublicLands_4',
+            onEachFeature: pop_ThreatenedPublicLands_4,
+            style: style_ThreatenedPublicLands_4_0,
+        });
+        bounds_group.addLayer(layer_ThreatenedPublicLands_4);
+        map.addLayer(layer_ThreatenedPublicLands_4);
+        function pop_AFFECTED_DESIGNATIONS_FINAL_5(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Unit Name</th>\
+                        <td class="visible-with-data" id="Unit Name">' + (feature.properties['Unit Name'] !== null ? autolinker.link(String(feature.properties['Unit Name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Manager</th>\
+                        <td class="visible-with-data" id="Manager">' + (feature.properties['Manager'] !== null ? autolinker.link(String(feature.properties['Manager']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Designation</th>\
+                        <td class="visible-with-data" id="Designation">' + (feature.properties['Designation'] !== null ? autolinker.link(String(feature.properties['Designation']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Threatened Acres</th>\
+                        <td class="visible-with-data" id="Threatened Acres">' + (feature.properties['Threatened Acres'] !== null ? autolinker.link(String(feature.properties['Threatened Acres']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Percent Threatened</th>\
+                        <td class="visible-with-data" id="Percent Threatened">' + (feature.properties['Percent Threatened'] !== null ? autolinker.link(String(feature.properties['Percent Threatened']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_AFFECTED_DESIGNATIONS_FINAL_5_0(feature) {
+            switch(String(feature.properties['Designation_Legend'])) {
+                case 'Inventoried Roadless Area':
+                    return {
+                pane: 'pane_AFFECTED_DESIGNATIONS_FINAL_5',
+                opacity: 1,
+                color: 'rgba(90,144,94,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(90,144,94,0.4)',
                 interactive: true,
             }
                     break;
-                case 'USFS':
+                case 'Wilderness Study Area':
                     return {
-                pane: 'pane_Public_Lands_Selloff_PADUS_1',
-                stroke: false, 
+                pane: 'pane_AFFECTED_DESIGNATIONS_FINAL_5',
+                opacity: 1,
+                color: 'rgba(42,111,160,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(133,155,135,0.6)',
+                fillColor: 'rgba(55,144,208,0.30196078431372547)',
                 interactive: true,
             }
                     break;
-                default:
+                case 'Area of Critical Environmental Concern':
                     return {
-                pane: 'pane_Public_Lands_Selloff_PADUS_1',
-                stroke: false, 
+                pane: 'pane_AFFECTED_DESIGNATIONS_FINAL_5',
+                opacity: 1,
+                color: 'rgba(185,48,48,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(131,13,215,0.0)',
+                fillColor: 'rgba(185,48,48,0.30196078431372547)',
+                interactive: true,
+            }
+                    break;
+                case 'Native American Land Area':
+                    return {
+                pane: 'pane_AFFECTED_DESIGNATIONS_FINAL_5',
+                opacity: 1,
+                color: 'rgba(67,236,219,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(67,236,219,0.30196078431372547)',
+                interactive: true,
+            }
+                    break;
+                case 'Other Designations':
+                    return {
+                pane: 'pane_AFFECTED_DESIGNATIONS_FINAL_5',
+                opacity: 1,
+                color: 'rgba(99,158,7,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(99,158,7,0.4)',
                 interactive: true,
             }
                     break;
             }
         }
-        map.createPane('pane_Public_Lands_Selloff_PADUS_1');
-        map.getPane('pane_Public_Lands_Selloff_PADUS_1').style.zIndex = 401;
-        map.getPane('pane_Public_Lands_Selloff_PADUS_1').style['mix-blend-mode'] = 'normal';
-        var layer_Public_Lands_Selloff_PADUS_1 = new L.geoJson(json_Public_Lands_Selloff_PADUS_1, {
+        map.createPane('pane_AFFECTED_DESIGNATIONS_FINAL_5');
+        map.getPane('pane_AFFECTED_DESIGNATIONS_FINAL_5').style.zIndex = 405;
+        map.getPane('pane_AFFECTED_DESIGNATIONS_FINAL_5').style['mix-blend-mode'] = 'normal';
+        var layer_AFFECTED_DESIGNATIONS_FINAL_5 = new L.geoJson(json_AFFECTED_DESIGNATIONS_FINAL_5, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_Public_Lands_Selloff_PADUS_1',
-            layerName: 'layer_Public_Lands_Selloff_PADUS_1',
-            pane: 'pane_Public_Lands_Selloff_PADUS_1',
-            onEachFeature: pop_Public_Lands_Selloff_PADUS_1,
-            style: style_Public_Lands_Selloff_PADUS_1_0,
+            dataVar: 'json_AFFECTED_DESIGNATIONS_FINAL_5',
+            layerName: 'layer_AFFECTED_DESIGNATIONS_FINAL_5',
+            pane: 'pane_AFFECTED_DESIGNATIONS_FINAL_5',
+            onEachFeature: pop_AFFECTED_DESIGNATIONS_FINAL_5,
+            style: style_AFFECTED_DESIGNATIONS_FINAL_5_0,
         });
-        bounds_group.addLayer(layer_Public_Lands_Selloff_PADUS_1);
-        map.addLayer(layer_Public_Lands_Selloff_PADUS_1);
-        function pop_BillionaireWildernress_2(feature, layer) {
+        bounds_group.addLayer(layer_AFFECTED_DESIGNATIONS_FINAL_5);
+        map.addLayer(layer_AFFECTED_DESIGNATIONS_FINAL_5);
+        function pop_THREATENED_DESIGNATION_OUTLINE_FINAL_6(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Mang_Name'] !== null ? autolinker.link(String(feature.properties['Mang_Name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_THREATENED_DESIGNATION_OUTLINE_FINAL_6_0() {
+            return {
+                pane: 'pane_THREATENED_DESIGNATION_OUTLINE_FINAL_6',
+                opacity: 1,
+                color: 'rgba(255,254,240,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,0,255,0.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_THREATENED_DESIGNATION_OUTLINE_FINAL_6');
+        map.getPane('pane_THREATENED_DESIGNATION_OUTLINE_FINAL_6').style.zIndex = 406;
+        map.getPane('pane_THREATENED_DESIGNATION_OUTLINE_FINAL_6').style['mix-blend-mode'] = 'normal';
+        var layer_THREATENED_DESIGNATION_OUTLINE_FINAL_6 = new L.geoJson(json_THREATENED_DESIGNATION_OUTLINE_FINAL_6, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_THREATENED_DESIGNATION_OUTLINE_FINAL_6',
+            layerName: 'layer_THREATENED_DESIGNATION_OUTLINE_FINAL_6',
+            pane: 'pane_THREATENED_DESIGNATION_OUTLINE_FINAL_6',
+            onEachFeature: pop_THREATENED_DESIGNATION_OUTLINE_FINAL_6,
+            style: style_THREATENED_DESIGNATION_OUTLINE_FINAL_6_0,
+        });
+        bounds_group.addLayer(layer_THREATENED_DESIGNATION_OUTLINE_FINAL_6);
+        map.addLayer(layer_THREATENED_DESIGNATION_OUTLINE_FINAL_6);
+        function pop_BillionaireWildernress_7(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -225,136 +565,85 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_BillionaireWildernress_2_0() {
+        function style_BillionaireWildernress_7_0() {
             return {
                 fill: false,
                 stroke: false,
                 interactive: false
             }
         }
-        map.createPane('pane_BillionaireWildernress_2');
-        map.getPane('pane_BillionaireWildernress_2').style.zIndex = 402;
-        map.getPane('pane_BillionaireWildernress_2').style['mix-blend-mode'] = 'normal';
-        var layer_BillionaireWildernress_2 = new L.geoJson(json_BillionaireWildernress_2, {
+        map.createPane('pane_BillionaireWildernress_7');
+        map.getPane('pane_BillionaireWildernress_7').style.zIndex = 407;
+        map.getPane('pane_BillionaireWildernress_7').style['mix-blend-mode'] = 'normal';
+        var layer_BillionaireWildernress_7 = new L.geoJson(json_BillionaireWildernress_7, {
             attribution: '',
             interactive: false,
-            dataVar: 'json_BillionaireWildernress_2',
-            layerName: 'layer_BillionaireWildernress_2',
-            pane: 'pane_BillionaireWildernress_2',
-            onEachFeature: pop_BillionaireWildernress_2,
+            dataVar: 'json_BillionaireWildernress_7',
+            layerName: 'layer_BillionaireWildernress_7',
+            pane: 'pane_BillionaireWildernress_7',
+            onEachFeature: pop_BillionaireWildernress_7,
             pointToLayer: function (feature, latlng) {
                 var context = {
                     feature: feature,
                     variables: {}
                 };
-                return L.circleMarker(latlng, style_BillionaireWildernress_2_0(feature));
+                return L.circleMarker(latlng, style_BillionaireWildernress_7_0(feature));
             },
         });
-        bounds_group.addLayer(layer_BillionaireWildernress_2);
-        map.addLayer(layer_BillionaireWildernress_2);
-        function pop_PublicLandBorders_3(feature, layer) {
-            var popupContent = '<table>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
-        }
-
-        function style_PublicLandBorders_3_0() {
-            return {
-                pane: 'pane_PublicLandBorders_3',
-                opacity: 1,
-                color: 'rgba(240,240,240,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(125,139,143,0.0)',
-                interactive: false,
-            }
-        }
-        map.createPane('pane_PublicLandBorders_3');
-        map.getPane('pane_PublicLandBorders_3').style.zIndex = 403;
-        map.getPane('pane_PublicLandBorders_3').style['mix-blend-mode'] = 'normal';
-        var layer_PublicLandBorders_3 = new L.geoJson(json_PublicLandBorders_3, {
-            attribution: '',
-            interactive: false,
-            dataVar: 'json_PublicLandBorders_3',
-            layerName: 'layer_PublicLandBorders_3',
-            pane: 'pane_PublicLandBorders_3',
-            onEachFeature: pop_PublicLandBorders_3,
-            style: style_PublicLandBorders_3_0,
-        });
-        bounds_group.addLayer(layer_PublicLandBorders_3);
-        map.addLayer(layer_PublicLandBorders_3);
-        function pop_TargetedLands_4(feature, layer) {
-            var popupContent = '<table>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['unique_id'] !== null ? autolinker.link(String(feature.properties['unique_id']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
-        }
-
-        function style_TargetedLands_4_0() {
-            return {
-                pane: 'pane_TargetedLands_4',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(255,255,0,0.6980392156862745)',
-                interactive: false,
-            }
-        }
-        map.createPane('pane_TargetedLands_4');
-        map.getPane('pane_TargetedLands_4').style.zIndex = 404;
-        map.getPane('pane_TargetedLands_4').style['mix-blend-mode'] = 'normal';
-        var layer_TargetedLands_4 = new L.geoJson(json_TargetedLands_4, {
-            attribution: '',
-            interactive: false,
-            dataVar: 'json_TargetedLands_4',
-            layerName: 'layer_TargetedLands_4',
-            pane: 'pane_TargetedLands_4',
-            onEachFeature: pop_TargetedLands_4,
-            style: style_TargetedLands_4_0,
-        });
-        bounds_group.addLayer(layer_TargetedLands_4);
-        map.addLayer(layer_TargetedLands_4);
+        bounds_group.addLayer(layer_BillionaireWildernress_7);
+        map.addLayer(layer_BillionaireWildernress_7);
         map.on("zoomend", function(e) {
+            if (map.getZoom() <= 19 && map.getZoom() >= 7) {
+                map.addLayer(layer_state_boundaryreprojected_3);
+            } else if (map.getZoom() > 19 || map.getZoom() < 7) {
+                map.removeLayer(layer_state_boundaryreprojected_3);
+            }
             if (map.getZoom() <= 19 && map.getZoom() >= 8) {
-                map.addLayer(layer_PublicLandBorders_3);
+                map.addLayer(layer_AFFECTED_DESIGNATIONS_FINAL_5);
             } else if (map.getZoom() > 19 || map.getZoom() < 8) {
-                map.removeLayer(layer_PublicLandBorders_3);
+                map.removeLayer(layer_AFFECTED_DESIGNATIONS_FINAL_5);
+            }
+            if (map.getZoom() <= 8 && map.getZoom() >= 7) {
+                map.addLayer(layer_THREATENED_DESIGNATION_OUTLINE_FINAL_6);
+            } else if (map.getZoom() > 8 || map.getZoom() < 7) {
+                map.removeLayer(layer_THREATENED_DESIGNATION_OUTLINE_FINAL_6);
             }
         });
-            if (map.getZoom() <= 19 && map.getZoom() >= 8) {
-                map.addLayer(layer_PublicLandBorders_3);
-            } else if (map.getZoom() > 19 || map.getZoom() < 8) {
-                map.removeLayer(layer_PublicLandBorders_3);
+            if (map.getZoom() <= 19 && map.getZoom() >= 7) {
+                map.addLayer(layer_state_boundaryreprojected_3);
+            } else if (map.getZoom() > 19 || map.getZoom() < 7) {
+                map.removeLayer(layer_state_boundaryreprojected_3);
             }
+            if (map.getZoom() <= 19 && map.getZoom() >= 8) {
+                map.addLayer(layer_AFFECTED_DESIGNATIONS_FINAL_5);
+            } else if (map.getZoom() > 19 || map.getZoom() < 8) {
+                map.removeLayer(layer_AFFECTED_DESIGNATIONS_FINAL_5);
+            }
+            if (map.getZoom() <= 8 && map.getZoom() >= 7) {
+                map.addLayer(layer_THREATENED_DESIGNATION_OUTLINE_FINAL_6);
+            } else if (map.getZoom() > 8 || map.getZoom() < 7) {
+                map.removeLayer(layer_THREATENED_DESIGNATION_OUTLINE_FINAL_6);
+            }
+        var overlaysTree = [
+    {label: 'Threatened Designations<br /><table><tr><td style="text-align: center;"><img src="legend/AFFECTED_DESIGNATIONS_FINAL_5_InventoriedRoadlessArea0.png" /></td><td>Inventoried Roadless Area</td></tr><tr><td style="text-align: center;"><img src="legend/AFFECTED_DESIGNATIONS_FINAL_5_WildernessStudyArea1.png" /></td><td>Wilderness Study Area</td></tr><tr><td style="text-align: center;"><img src="legend/AFFECTED_DESIGNATIONS_FINAL_5_AreaofCriticalEnvironmentalConcern2.png" /></td><td>Area of Critical Environmental Concern</td></tr><tr><td style="text-align: center;"><img src="legend/AFFECTED_DESIGNATIONS_FINAL_5_NativeAmericanLandArea3.png" /></td><td>Native American Land Area</td></tr><tr><td style="text-align: center;"><img src="legend/AFFECTED_DESIGNATIONS_FINAL_5_OtherDesignations4.png" /></td><td>Other Designations</td></tr></table>', layer: layer_AFFECTED_DESIGNATIONS_FINAL_5},
+    {label: '<img src="legend/ThreatenedPublicLands_4.png" /> Threatened Public Lands', layer: layer_ThreatenedPublicLands_4},
+    {label: '<img src="legend/BLM_2.png" /> BLM', layer: layer_BLM_2},
+    {label: '<img src="legend/USFS_1.png" /> USFS', layer: layer_USFS_1}
+];
+
+var lay = L.control.layers.tree(null, overlaysTree, {
+    collapsed: true,
+});
+        lay.addTo(map);
         map.on("zoomend", function(){
 
-                if (map.hasLayer(layer_BillionaireWildernress_2)) {
+                if (map.hasLayer(layer_BillionaireWildernress_7)) {
                     if (map.getZoom() <= 5 && map.getZoom() >= 9) {
-                        layer_BillionaireWildernress_2.eachLayer(function (layer) {
+                        layer_BillionaireWildernress_7.eachLayer(function (layer) {
                             layer.openTooltip();
                         });
                     } else {
-                        layer_BillionaireWildernress_2.eachLayer(function (layer) {
+                        layer_BillionaireWildernress_7.eachLayer(function (layer) {
                             layer.closeTooltip();
                         });
                     }
@@ -362,45 +651,38 @@
         });
         setBounds();
         var i = 0;
-        layer_BillionaireWildernress_2.eachLayer(function(layer) {
+        layer_BillionaireWildernress_7.eachLayer(function(layer) {
             var context = {
                 feature: layer.feature,
                 variables: {}
             };
-            layer.bindTooltip((layer.feature.properties['Name'] !== null?String('<div style="color: #323232; font-size: 14pt; font-style: italic; font-family: \'Times New Roman\', sans-serif;">' + layer.feature.properties['Name']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_BillionaireWildernress_2'});
+            layer.bindTooltip((layer.feature.properties['Name'] !== null?String('<div style="color: #828282; font-size: 10pt; font-style: italic; font-family: \'Times New Roman\', sans-serif;">' + layer.feature.properties['Name']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_BillionaireWildernress_7'});
             labels.push(layer);
             totalMarkers += 1;
               layer.added = true;
               addLabel(layer, i);
               i++;
         });
-                if (map.hasLayer(layer_BillionaireWildernress_2)) {
+                if (map.hasLayer(layer_BillionaireWildernress_7)) {
                     if (map.getZoom() <= 5 && map.getZoom() >= 9) {
-                        layer_BillionaireWildernress_2.eachLayer(function (layer) {
+                        layer_BillionaireWildernress_7.eachLayer(function (layer) {
                             layer.openTooltip();
                         });
                     } else {
-                        layer_BillionaireWildernress_2.eachLayer(function (layer) {
+                        layer_BillionaireWildernress_7.eachLayer(function (layer) {
                             layer.closeTooltip();
                         });
                     }
                 }
-        map.addControl(new L.Control.Search({
-            layer: layer_Public_Lands_Selloff_PADUS_1,
-            initial: false,
-            hideMarkerOnCollapse: true,
-            propertyName: 'Unit_Nm'}));
-        document.getElementsByClassName('search-button')[0].className +=
-         ' fa fa-binoculars';
-        resetLabels([layer_BillionaireWildernress_2]);
+        resetLabels([layer_BillionaireWildernress_7]);
         map.on("zoomend", function(){
-            resetLabels([layer_BillionaireWildernress_2]);
+            resetLabels([layer_BillionaireWildernress_7]);
         });
         map.on("layeradd", function(){
-            resetLabels([layer_BillionaireWildernress_2]);
+            resetLabels([layer_BillionaireWildernress_7]);
         });
         map.on("layerremove", function(){
-            resetLabels([layer_BillionaireWildernress_2]);
+            resetLabels([layer_BillionaireWildernress_7]);
         });
         </script>
     </body>
