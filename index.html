@@ -18,6 +18,9 @@
             padding: 0;
             margin: 0;
         }
+	#map {
+    min-height: 100vh;
+}
         </style>
         <title>Public Land Sell-Off: Special Designations At Risk</title>
     </head>
@@ -43,8 +46,11 @@
         <script src="data/BillionaireWildernress_7.js"></script>
         <script>
         var map = L.map('map', {
-            zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[42.73972331631743,-116.90782776242395],[48.13418386372131,-108.55170260075911]]);
+    zoomControl: false,
+    maxZoom: 28,
+    minZoom: 1,
+    tap: false // ← add this line
+}).fitBounds([[42.7397, -116.9078], [48.1341, -108.5517]]);
 	// Add static "Billionaire Wilderness" label
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
