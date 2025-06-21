@@ -230,14 +230,18 @@ loadTopoLayer("Threatened_zoom", "data/threatened_zoom.json", "threatened", {
         title.addTo(map);
         var abstract = new L.Control({'position':'topright'});
         abstract.onAdd = function (map) {
-            this._div = L.DomUtil.create('div',
-            'leaflet-control abstract');
-            this._div.id = 'abstract'
-                this._div.setAttribute("onmouseenter", "abstract.show()");
-                this._div.setAttribute("onmouseleave", "abstract.hide()");
-                this.hide();
-                return this._div;
-            };
+    this._div = L.DomUtil.create('div', 'leaflet-control abstract');
+    this._div.id = 'abstract';
+    this._div.addEventListener("click", () => {
+        if (this._div.classList.contains("abstract")) {
+            this.show();
+        } else {
+            this.hide();
+        }
+    });
+    this.hide();
+    return this._div;
+};
             abstract.hide = function () {
                 this._div.classList.remove("abstractUncollapsed");
                 this._div.classList.add("abstract");
