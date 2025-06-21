@@ -40,7 +40,7 @@
         <script>
         var map = L.map('map', {
             zoomControl:false, maxZoom:17, minZoom:5
-        }).fitBounds([[41.67844672824188,-117.45912883049486],[43.73491156537145,-114.00969315894598]]);
+        }).setView([42.7, -114.5], 5);
 	    // 👉 ADD THIS;
     map.createPane('boundaries');
     map.getPane('boundaries').style.zIndex = 800;
