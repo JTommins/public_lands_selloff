@@ -17,6 +17,48 @@
             padding: 0;
             margin: 0;
         }
+	/* Modal Background */
+#abstract-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Modal Content */
+#abstract-content {
+    background-color: #f9f9f9;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    font-family: sans-serif;
+    position: relative;
+}
+
+/* Close Button */
+#abstract-close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    color: #aaa;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#abstract-close:hover {
+    color: #000;
+}
         </style>
         <title>Public Land Sell-Off: Special Designations At Risk</title>
 	<script src="js/leaflet.js"></script>
@@ -24,7 +66,16 @@
 	<script src="https://unpkg.com/leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js"></script>
     </head>
     <body>
-        <div id="map">
+        <div id="map"></div>
+	<div id="abstract-modal">
+  <div id="abstract-content">
+    <span id="abstract-close">&times;</span>
+    <p>Within the domain of the U.S. Forest Service and Bureau of Land Management, a variety of special landscape designations exist to preserve distinct ecological, cultural, and recreational areas for public use and benefit. These include the vulnerable ecosystems protected by Wilderness Study Areas and Inventoried Roadless Areas; treasured cultural and recreational resources in National Scenic and Botanical Areas, Historical Areas, and Recreation Management Areas; critical tools for ecological study in Research Natural Areas and Experimental Forests; and many more.</p>
+    <p>The recent Republican effort to offer over 250 million acres of our public lands for potential sale, while exempting National Parks, National Monuments, and Wilderness Areas, ignores many of these equally important and valuable protected area units. This map shows the extent of proposed land eligible for sale in the bill and its overlap with these less well-known, but no less important, designations.</p>
+    <p>Zoom in and click on the special designated areas to see which of these irreplaceable landscapes are at risk. Then write, call, or knock on the door of your federal representative and demand they preserve our public lands.</p>
+    <em>- Jamie Tommins</em>
+  </div>
+</div>
         </div>
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/L.Control.Layers.Tree.min.js"></script>
@@ -78,29 +129,6 @@ function loadTopoLayer(name, url, objectKey, style, pane = null) {
     .catch(err => console.error(`Failed to load ${name}:`, err));
 }
 
-const usfsVectorTiles = L.vectorGrid.protobuf("tiles/usfs_tiles/{z}/{x}/{y}.pbf", {
-  vectorTileLayerStyles: {
-    usfs: {
-      fill: true,
-      fillColor: "#e95f0d",
-      fillOpacity: 0.8,
-      stroke: false
-    }
-  },
-  minZoom: 7,
-  maxZoom: 13
-
-});
-
-usfsVectorTiles.on('tileerror', e => {
-  console.warn('Vector tile load error:', e);
-});
-
-usfsVectorTiles.on('load', () => {
-  console.log('Vector tiles loaded!');
-});
-
-// Auto-toggle visibility by zoom level
 // Auto-toggle visibility by zoom level
 map.on("zoomend", () => {
   const zoom = map.getZoom();
@@ -129,17 +157,6 @@ map.on("zoomend", () => {
       if (map.hasLayer(layer)) {
         map.removeLayer(layer);
       }
-    }
-  }
-
-  // ✅ move vector tile toggle *into* here
-  if (zoom >= 7) {
-    if (!map.hasLayer(usfsVectorTiles)) {
-      map.addLayer(usfsVectorTiles);
-    }
-  } else {
-    if (map.hasLayer(usfsVectorTiles)) {
-      map.removeLayer(usfsVectorTiles);
     }
   }
 }); // only one closing parenthesis here
@@ -228,27 +245,6 @@ loadTopoLayer("Threatened_zoom", "data/threatened_zoom.json", "threatened", {
             this._div.innerHTML = '<h2>Public Land Sell-Off: Special Designations At Risk</h2>';
         };
         title.addTo(map);
-        var abstract = new L.Control({'position':'topright'});
-        abstract.onAdd = function (map) {
-            this._div = L.DomUtil.create('div',
-            'leaflet-control abstract');
-            this._div.id = 'abstract'
-                this._div.setAttribute("onmouseenter", "abstract.show()");
-                this._div.setAttribute("onmouseleave", "abstract.hide()");
-                this.hide();
-                return this._div;
-            };
-            abstract.hide = function () {
-                this._div.classList.remove("abstractUncollapsed");
-                this._div.classList.add("abstract");
-                this._div.innerHTML = 'i'
-            }
-            abstract.show = function () {
-                this._div.classList.remove("abstract");
-                this._div.classList.add("abstractUncollapsed");
-                this._div.innerHTML = 'Within the domain of the U.S. Forest Service and Bureau of Land Management, a variety of special landscape designations exist to preserve distinct ecological, cultural, and recreational areas for public use and benefit. These include the vulnerable ecosystems protected by Wilderness Study Areas and Inventoried Roadless Areas; treasured cultural and recreational resources in National Scenic and Botanical Areas, Historical Areas, and Recreation Management Areas; critical tools for ecological study in Research Natural Areas and Experimental Forests; and many more.<br /><br />The recent Republican effort to offer over 250 million acres of our public lands for potential sale, while exempting National Parks, National Monuments, and Wilderness Areas, ignores many of these equally important and valuable protected area units. This map shows the extent of proposed land eligible for sale in the bill and its overlap with these less well-known, but no less important, designations. <br /><br />Zoom in and click on the special designated areas to see which of these irreplaceable landscapes are at risk. Then write, call, or knock on the door of your federal representative and demand they preserve our public lands.<br /><em>- Jamie Tommins</em> ';
-        };
-        abstract.addTo(map);
         var zoomControl = L.control.zoom({
             position: 'topleft'
         }).addTo(map);
@@ -489,6 +485,17 @@ map.on("zoomend", function () {
         });
         lay.addTo(map);
         setBounds();
+	// Abstract modal dismissal
+document.getElementById("abstract-close").onclick = function () {
+  document.getElementById("abstract-modal").style.display = "none";
+};
+
+// Optional: close modal if user clicks outside the box
+window.onclick = function (event) {
+  if (event.target.id === "abstract-modal") {
+    document.getElementById("abstract-modal").style.display = "none";
+  }
+};
         </script>
     </body>
 </html>
