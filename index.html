@@ -17,8 +17,7 @@
             padding: 0;
             margin: 0;
         }
-	/* Modal Background */
-/* Modal Background */
+	/* Abstract Background */
 #abstract-modal {
     display: flex;
     justify-content: center;
@@ -34,7 +33,7 @@
     box-sizing: border-box;
 }
 
-/* Modal Content */
+/* Abstract */
 #abstract-content {
     background-color: #f9f9f9;
     padding: 1rem;
@@ -97,8 +96,7 @@
         var map = L.map('map', {
             zoomControl:false, maxZoom:17, minZoom:5
         }).setView([41.2, -109.5], 5);
-	    // 👉 ADD THIS;
-    // Main drawing order for base/topo layers
+    // drawing order
 map.createPane('pane_usfs');
 map.getPane('pane_usfs').style.zIndex = 695;
 
@@ -108,12 +106,10 @@ map.getPane('pane_blm').style.zIndex = 700;
 map.createPane('pane_threatened');
 map.getPane('pane_threatened').style.zIndex = 805;
 
-// Overlay pane for outlines or static boundary labels
 map.createPane('pane_boundaries');
 map.getPane('pane_boundaries').style.zIndex = 800;
 map.getPane('pane_boundaries').style.pointerEvents = 'none';
 
-// Topmost popup pane (for modals, legends, hover tips, etc.)
 map.createPane('popupPane');
 map.getPane('popupPane').style.zIndex = 1100;
 
@@ -148,7 +144,7 @@ function loadTopoLayer(name, url, objectKey, style, pane = null) {
     .catch(err => console.error(`Failed to load ${name}:`, err));
 }
 
-// Auto-toggle visibility by zoom level
+// Auto-toggle zoom
 map.on("zoomend", () => {
   const zoom = map.getZoom();
   console.log("Current zoom level:", zoom);
@@ -178,7 +174,7 @@ map.on("zoomend", () => {
       }
     }
   }
-}); // only one closing parenthesis here
+}); 
 
 
 loadTopoLayer("BLM", "data/blm.json", "BLM BASE FINAL", {
@@ -240,7 +236,6 @@ loadTopoLayer("Threatened_zoom", "data/threatened_zoom.json", "threatened", {
          }
          return tempDiv.innerHTML;
         }
-        // add class to format popup if it contains media
 		function addClassToPopupIfMedia(content, popup) {
 			var tempDiv = document.createElement('div');
 			tempDiv.innerHTML = content;
@@ -454,7 +449,7 @@ loadTopoLayer("Threatened_zoom", "data/threatened_zoom.json", "threatened", {
         bounds_group.addLayer(layer_ThreatenedDesignatedAreasFinalFinal_2);
 	map.addLayer(layer_ThreatenedDesignatedAreasFinalFinal_2);
 
-	// Auto-toggle these specific GeoJSON layers based on zoom
+	// Auto-toggle based on zoom
 map.on("zoomend", function () {
     const zoom = map.getZoom();
 
@@ -471,7 +466,6 @@ map.on("zoomend", function () {
     }
 });
 
-// Trigger once on load
 (function initLayerVisibility() {
     const zoom = map.getZoom();
 
@@ -504,12 +498,10 @@ map.on("zoomend", function () {
         });
         lay.addTo(map);
         setBounds();
-	// Abstract modal dismissal
 document.getElementById("abstract-close").onclick = function () {
   document.getElementById("abstract-modal").style.display = "none";
 };
 
-// Optional: close modal if user clicks outside the box
 window.onclick = function (event) {
   if (event.target.id === "abstract-modal") {
     document.getElementById("abstract-modal").style.display = "none";
