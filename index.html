@@ -18,6 +18,7 @@
             margin: 0;
         }
 	/* Modal Background */
+/* Modal Background */
 #abstract-modal {
     display: flex;
     justify-content: center;
@@ -72,9 +73,8 @@
 	<div id="abstract-modal">
   <div id="abstract-content">
     <span id="abstract-close">&times;</span>
-    <h2 class="abstract-title">Public Lands Sell-Off: Special Designations At Risk</h2>
     <p>Within the domain of the U.S. Forest Service and Bureau of Land Management, a variety of special landscape designations exist to preserve distinct ecological, cultural, and recreational areas for public use and benefit. These include the vulnerable ecosystems protected by Wilderness Study Areas and Inventoried Roadless Areas; treasured cultural and recreational resources in National Scenic and Botanical Areas, Historical Areas, and Recreation Management Areas; critical tools for ecological study in Research Natural Areas and Experimental Forests; and many more.</p>
-    <p>The recent Republican effort to offer over 250 million acres of our public lands for potential sale, while exempting National Parks, National Monuments, and Wilderness Areas, ignores many of these equally valuable protected area units. This map shows the extent of proposed land eligible for sale in the bill and its overlap with these less well-known, but no less important, designations.</p>
+    <p>The recent Republican effort to offer over 250 million acres of our public lands for potential sale, while exempting National Parks, National Monuments, and Wilderness Areas, ignores many of these equally important and valuable protected area units. This map shows the extent of proposed land eligible for sale in the bill and its overlap with these less well-known, but no less important, designations.</p>
     <p>Zoom in and click on the special designated areas to see which of these irreplaceable landscapes are at risk. Then write, call, or knock on the door of your federal representative and demand they preserve our public lands.</p>
     <em>- Jamie Tommins</em>
   </div>
@@ -96,11 +96,25 @@
             zoomControl:false, maxZoom:17, minZoom:5
         }).setView([41.2, -109.5], 5);
 	    // 👉 ADD THIS;
-    map.createPane('boundaries');
-    map.getPane('boundaries').style.zIndex = 800;
-    map.getPane('boundaries').style.pointerEvents = 'none';
-    map.createPane('popupPane');
+    // Main drawing order for base/topo layers
+map.createPane('pane_usfs');
+map.getPane('pane_usfs').style.zIndex = 695;
+
+map.createPane('pane_blm');
+map.getPane('pane_blm').style.zIndex = 700;
+
+map.createPane('pane_threatened');
+map.getPane('pane_threatened').style.zIndex = 805;
+
+// Overlay pane for outlines or static boundary labels
+map.createPane('pane_boundaries');
+map.getPane('pane_boundaries').style.zIndex = 800;
+map.getPane('pane_boundaries').style.pointerEvents = 'none';
+
+// Topmost popup pane (for modals, legends, hover tips, etc.)
+map.createPane('popupPane');
 map.getPane('popupPane').style.zIndex = 1100;
+
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a> &middot; Map and analysis by Jamie Tommins');
 	const lowZoomLayers = {};
@@ -169,13 +183,19 @@ loadTopoLayer("BLM", "data/blm.json", "BLM BASE FINAL", {
   color: "#6e6c59",
   fillOpacity: 1,
   stroke: false
-});
+}, "pane_blm");
 
 loadTopoLayer("USFS", "data/usfs.json", "USFS BASE FINAL", {
   color: "#576559",
   fillOpacity: 1,
   stroke: false
-});
+}, "pane_usfs");
+
+loadTopoLayer("Threatened", "data/threatened.json", "THREATENED LANDS FINAL", {
+  color: "#e74c35",
+  fillOpacity: .8,
+  stroke: false
+}, "pane_threatened");
 
 loadTopoLayer("States", "data/state_boundary.json", "state_boundary", {
   color: "#aaaaaa",
@@ -183,13 +203,7 @@ loadTopoLayer("States", "data/state_boundary.json", "state_boundary", {
   opacity: 0.8,
   fillOpacity: 0,
   stroke: true
-}, "boundaries");
-
-loadTopoLayer("Threatened", "data/threatened.json", "THREATENED LANDS FINAL", {
-  color: "#e74c35",
-  fillOpacity: .8,
-  stroke: false
-});
+}, "pane_boundaries");
 
 loadTopoLayer("BLM_zoom", "data/blm_zoom.json", "blm", {
   color: "#6e6c59",
